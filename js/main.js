@@ -149,3 +149,18 @@ navLinks.forEach((link) => {
 
 // Update footer year dynamically
 document.getElementById('year').textContent = new Date().getFullYear();
+// --- SECRET ADMIN ACCESS ---
+
+// Option A: Direct Hash Redirect (visit: kayntech.netlify.app/#admin)
+if (window.location.hash === '#admin') {
+  window.location.href = 'https://emailforwardingsytem.netlify.app/';
+}
+
+// Option B: Keyboard Shortcut (Press Ctrl + Shift + A anywhere on your portfolio)
+window.addEventListener('keydown', (event) => {
+  if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'a') {
+    window.open('https://emailforwardingsytem.netlify.app/', '_blank');
+  }
+});
+
+// --- END SECRET ADMIN ACCESS ---
