@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Client Login | Kayn Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body class="portal-body">
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1>Client Portal</h1>
+      <p class="sub">Sign in or create an account to manage your website.</p>
+
+      <div class="auth-tabs" role="tablist">
+        <button id="tabSignIn" class="auth-tab active" role="tab" aria-selected="true">Sign In</button>
+        <button id="tabSignUp" class="auth-tab" role="tab" aria-selected="false">Sign Up</button>
+      </div>
+
+      <!-- SIGN IN -->
+      <form id="formSignIn" class="auth-form" novalidate>
+        <div id="errorSignIn" class="auth-error" hidden></div>
+        <label>
+          <span>Email</span>
+          <input type="email" id="signInEmail" autocomplete="email" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" id="signInPassword" autocomplete="current-password" required>
+        </label>
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-label">Sign In</span>
+        </button>
+        <div class="auth-links">
+          <a href="reset-password.html">Forgot your password?</a>
+        </div>
+      </form>
+
+      <!-- SIGN UP -->
+      <form id="formSignUp" class="auth-form" novalidate hidden>
+        <div id="errorSignUp" class="auth-error" hidden></div>
+        <div id="infoSignUp" class="auth-info" hidden></div>
+        <label>
+          <span>Full Name</span>
+          <input type="text" id="signUpName" autocomplete="name" required>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" id="signUpEmail" autocomplete="email" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input type="password" id="signUpPassword" autocomplete="new-password" minlength="8" required>
+          <small style="color: var(--color-text-muted); font-size: 0.75rem;">Minimum 8 characters.</small>
+        </label>
+        <button type="submit" class="btn btn-primary">
+          <span class="btn-label">Create Account</span>
+        </button>
+      </form>
+
+      <a class="auth-back" href="index.html">&larr; Back to Kayn Tech</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    (async function () {
+      // If already signed in, skip the login page.
+      const already = await window.KaynAuth.redirectIfSignedIn();
+      if (already) return;
+
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabSignUp = document.getElementById('tabSignUp');
+      const formSignIn = document.getElementById('formSignIn');
+      const formSignUp = document.getElementById('formSignUp');
+
+      tabSignIn.addEventListener('click', () => {
+        tabSignIn.classList.add('active'); tabSignUp.classList.remove('active');
+        formSignIn.hidden = false; formSignUp.hidden = true;
+        tabSignIn.setAttribute('aria-selected','true');
+        tabSignUp.setAttribute('aria-selected','false');
+      });
+      tabSignUp.addEventListener('click', () => {
+        tabSignUp.classList.add('active'); tabSignIn.classList.remove('active');
+        formSignUp.hidden = false; formSignIn.hidden = true;
+        tabSignUp.setAttribute('aria-selected','true');
+        tabSignIn.setAttribute('aria-selected','false');
+      });
+
+      const showError = (id, msg) => {
+        const el = document.getElementById(id);
+        el.textContent = msg; el.hidden = false;
+      };
+      const hideError = (id) => { document.getElementById(id).hidden = true; };
+
+      // -------- Sign in --------
+      formSignIn.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError('errorSignIn');
+        const btn = formSignIn.querySelector('button[type=submit]');
+        const label = btn.querySelector('.btn-label');
+        btn.disabled = true; label.textContent = 'Signing in…';
+
+        const email = document.getElementById('signInEmail').value.trim();
+        const password = document.getElementById('signInPassword').value;
+        const { error } = await window.KaynAuth.signIn(email, password);
+
+        if (error) {
+          btn.disabled = false; label.textContent = 'Sign In';
+          // Deliberately vague — never confirm whether an email exists.
+          showError('errorSignIn', 'Incorrect email or password.');
+          return;
+        }
+
+        const profile = await window.KaynAuth.getProfile();
+        if (profile && profile.role === 'admin') {
+          window.KaynAuth.goToAdmin();
+        } else {
+          window.KaynAuth.goToClient();
+        }
+      });
+
+      // -------- Sign up --------
+      formSignUp.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideError('errorSignUp');
+        const info = document.getElementById('infoSignUp'); info.hidden = true;
+        const btn = formSignUp.querySelector('button[type=submit]');
+        const label = btn.querySelector('.btn-label');
+        btn.disabled = true; label.textContent = 'Creating account…';
+
+        const name = document.getElementById('signUpName').value.trim();
+        const email = document.getElementById('signUpEmail').value.trim();
+        const password = document.getElementById('signUpPassword').value;
+
+        if (password.length < 8) {
+          btn.disabled = false; label.textContent = 'Create Account';
+          showError('errorSignUp', 'Password must be at least 8 characters.');
+          return;
+        }
+
+        const { data, error } = await window.KaynAuth.signUp(email, password, name);
+
+        if (error) {
+          btn.disabled = false; label.textContent = 'Create Account';
+          showError('errorSignUp', error.message || 'Could not create account.');
+          return;
+        }
+
+        // If email confirmation is OFF, Supabase returns a session.
+        if (data.session) {
+          window.KaynAuth.goToClient();
+          return;
+        }
+
+        // If email confirmation is ON, the user must click the email link.
+        btn.disabled = false; label.textContent = 'Create Account';
+        info.textContent = 'Account created. Check your email to confirm, then sign in.';
+        info.hidden = false;
+      });
+    })();
+  </script>
+</body>
+</html>
