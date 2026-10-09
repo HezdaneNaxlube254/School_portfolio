@@ -344,3 +344,5 @@ table.data tr:last-child td { border-bottom: none; }
   .dash-grid { grid-template-columns: 1fr; }
   .dash-nav { position: static; }
 }
+/* Make the HTML `hidden` attribute always win, even against display: grid */
+[hidden] { display: none !important; }
