@@ -1,0 +1,9 @@
+{
+  "name": "kayntech-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kayn Tech — portfolio and client management portal",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

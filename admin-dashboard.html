@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Dashboard | Kayn Tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body class="portal-body">
+
+  <header class="portal-header">
+    <div class="portal-header-inner">
+      <a class="portal-brand" href="index.html">Kayn Tech · Admin</a>
+      <div class="portal-user">
+        <span>Signed in as <strong id="adminName">…</strong></span>
+        <button id="btnSignOut" class="btn btn-ghost btn-sm">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-shell">
+    <div class="dash-grid">
+
+      <nav class="dash-nav" id="dashNav">
+        <button data-tab="overview" class="active">Overview</button>
+        <button data-tab="clients">Clients</button>
+        <button data-tab="websites">Websites</button>
+        <button data-tab="plans">Plans</button>
+        <button data-tab="payments">Payments</button>
+        <button data-tab="updates">Project Updates</button>
+        <button data-tab="documents">Documents</button>
+        <button data-tab="support">Support</button>
+      </nav>
+
+      <section class="dash-main">
+        <div class="dash-header">
+          <div>
+            <h1 id="tabTitle">Overview</h1>
+            <p class="sub" id="tabSub">A snapshot of your clients and their websites.</p>
+          </div>
+        </div>
+
+        <div id="tabContent">
+          <div class="empty"><span class="loader"></span> Loading…</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

@@ -344,5 +344,57 @@ table.data tr:last-child td { border-bottom: none; }
   .dash-grid { grid-template-columns: 1fr; }
   .dash-nav { position: static; }
 }
-/* Make the HTML `hidden` attribute always win, even against display: grid */
+/* HTML hidden attribute must beat .auth-form's display: grid */
 [hidden] { display: none !important; }
+
+/* Portal dashboard extras */
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.dash-header h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.dash-header .sub {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+.action-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-bg-3);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-secondary);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  color: var(--color-text);
+  font-size: 0.9rem;
+  z-index: 10000;
+  box-shadow: var(--shadow-soft);
+}
+.toast.error { border-left-color: var(--color-accent); }
+.invite-result {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: var(--color-bg-3);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+.invite-result a { color: var(--color-primary); }
